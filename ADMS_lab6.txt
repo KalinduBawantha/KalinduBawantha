@@ -1,0 +1,138 @@
+db.order.aggregate([
+{$match:{Size:"Medium"}}
+])
+
+
+db.order.aggregate([
+{$match:{Size:"Medium"}},
+{$group: {_id:"$Pizza_name",totalOrder:{$sum:"$Quantity"}}}
+])
+
+
+db.order.aggregate([
+{$match:
+	{Order_date: {
+			$gte:ISODate("2020-01-03T00:00:00Z"),
+			$lte:ISODate("2022-01-30T00:00:00Z")
+			
+			}
+	
+	}
+}
+])
+
+
+db.order.aggregate([
+{
+	$group:{
+		_id:"$Pizza_name",total_Qty:{$sum:"$Quantity"}
+		}
+}
+])
+
+
+db.order.aggregate([
+{$match:{Size:{$in:["Medium","Large"]}}},
+{
+	$group:{
+		_id:"$Size",totalQty:{$sum:"$Quantity"}
+		}
+}
+])
+
+
+db.order.aggregate([
+{
+	$group:{
+		_id:"$Pizza_name",totalQty:{$sum:"$Quantity"}
+		}	
+},
+{
+	$sort:{Quantity:-1}
+},
+{
+$limit:1
+}
+])
+
+
+
+db.order.aggregate([
+{
+$match:{
+	Order_date:{
+		$gte:ISODate("2021-01-01T00:00:00Z"),
+		$lte:ISODate("2021-12-31T00:00:00Z")	
+		}
+	}
+},
+{
+	$group:{
+		_id:null,totalQty:{$sum:"$Quantity"}
+	}
+}
+])
+
+
+
+mongoimport --version
+
+mongoimport --jsonArray --db mydb --collection mycollection --file cars.json
+
+db.order.aggregate([
+{
+	$project:{
+		_id:"$Pizza_name" ,
+		Size:1 ,
+		Order_date:1
+		}
+}
+
+])
+
+
+db.order.aggregate([
+{
+	$project:{
+		_id:"$Pizza_name" ,
+		Size:1 ,
+		year:{$year:"$Order_date"}
+		}
+}
+
+])
+
+
+db.order.aggregate([
+  {
+    $addFields: {
+      year_sold: { $year: "$Order_date" }
+    }
+  }
+])
+
+
+{
+"Order_id": "O0011",
+"Pizza_name": "pan",
+ "Size": "Medium",
+ "Quantity": 2,
+ "Order_date": ISODate("2021-10-15T00:00:00.000Z"),
+ "year_sold": "2021"
+}
+
+
+----
+
+db.CustomerOrders.find({ Quantity: { $ne: 1 } }).pretty()
+
+db.CustomerOrders.find({
+ Product: { $in: ["Laptop", "Smartphone"] }
+}).pretty()
+
+
+db.CustomerOrders.find({
+ $or: [{ OrderStatus: "Shipped" }, { OrderStatus: "Delivered" }]
+}).pretty()
+
+---
